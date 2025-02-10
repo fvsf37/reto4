@@ -21,4 +21,25 @@ router.post("/points", function (req, res, next) {
   res.json(newPoint);
 });
 
+// Ruta para editar un punto de interés
+router.put("/points/:id", function (req, res, next) {
+  const pointId = parseInt(req.params.id);
+  const updatedPoint = {
+    id: pointId,
+    name: req.body.name,
+    description: req.body.description,
+    latitude: parseFloat(req.body.latitude),
+    longitude: parseFloat(req.body.longitude),
+  };
+
+  let index = pointsOfInterest.findIndex((point) => point.id === pointId);
+
+  if (index !== -1) {
+    pointsOfInterest[index] = updatedPoint;
+    res.json(updatedPoint);
+  } else {
+    res.status(404).json({ error: "Punto no encontrado" });
+  }
+});
+
 module.exports = router;

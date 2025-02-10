@@ -34,6 +34,21 @@
       <button type="submit">Añadir Punto</button>
     </form>
 
+    <h2>Editar Punto de Interés</h2>
+    <form id="editPointForm">
+      <label>ID del Punto:</label>
+      <input type="number" id="editId" required />
+      <label>Nuevo Nombre:</label>
+      <input type="text" id="editName" required />
+      <label>Nueva Descripción:</label>
+      <input type="text" id="editDescription" required />
+      <label>Nueva Latitud:</label>
+      <input type="number" id="editLatitude" step="any" required />
+      <label>Nueva Longitud:</label>
+      <input type="number" id="editLongitude" step="any" required />
+      <button type="submit">Editar Punto</button>
+    </form>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
       var map = L.map("map").setView([40.4168, -3.7038], 6); // Madrid como punto central
@@ -88,6 +103,37 @@
             .catch((error) =>
               console.error("Error añadiendo el punto:", error)
             );
+        });
+
+      // Evento para editar un punto existente
+      document
+        .getElementById("editPointForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          var editedPoint = {
+            id: parseInt(document.getElementById("editId").value),
+            name: document.getElementById("editName").value,
+            description: document.getElementById("editDescription").value,
+            latitude: parseFloat(document.getElementById("editLatitude").value),
+            longitude: parseFloat(
+              document.getElementById("editLongitude").value
+            ),
+          };
+
+          fetch("/api/points/" + editedPoint.id, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(editedPoint),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              alert("Punto editado correctamente.");
+              location.reload(); // Recargar la página para ver los cambios
+            })
+            .catch((error) => console.error("Error editando el punto:", error));
         });
     </script>
   </body>
