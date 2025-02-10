@@ -42,4 +42,17 @@ router.put("/points/:id", function (req, res, next) {
   }
 });
 
+// Ruta para eliminar un punto de interés
+router.delete("/points/:id", function (req, res, next) {
+  const pointId = parseInt(req.params.id);
+  let index = pointsOfInterest.findIndex((point) => point.id === pointId);
+
+  if (index !== -1) {
+    pointsOfInterest.splice(index, 1);
+    res.json({ message: "Punto eliminado correctamente", id: pointId });
+  } else {
+    res.status(404).json({ error: "Punto no encontrado" });
+  }
+});
+
 module.exports = router;

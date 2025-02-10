@@ -8,6 +8,10 @@
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
     <style>
       #map {
         height: 500px;
@@ -16,70 +20,127 @@
       }
     </style>
   </head>
-  <body>
-    <h1>Mapa de Puntos de Interés</h1>
+  <body class="container">
+    <h1 class="text-center mt-3">Mapa de Puntos de Interés</h1>
 
     <div id="map"></div>
 
     <h2>Añadir Nuevo Punto de Interés</h2>
-    <form id="addPointForm">
-      <label>Nombre:</label>
-      <input type="text" id="name" required />
-      <label>Descripción:</label>
-      <input type="text" id="description" required />
-      <label>Latitud:</label>
-      <input type="number" id="latitude" step="any" required />
-      <label>Longitud:</label>
-      <input type="number" id="longitude" step="any" required />
-      <button type="submit">Añadir Punto</button>
+    <form id="addPointForm" class="mb-4">
+      <div class="mb-2">
+        <label class="form-label">Nombre:</label>
+        <input type="text" id="name" class="form-control" required />
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Descripción:</label>
+        <input type="text" id="description" class="form-control" required />
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Latitud:</label>
+        <input
+          type="number"
+          id="latitude"
+          class="form-control"
+          step="any"
+          required
+        />
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Longitud:</label>
+        <input
+          type="number"
+          id="longitude"
+          class="form-control"
+          step="any"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Añadir Punto</button>
     </form>
 
-    <h2>Editar Punto de Interés</h2>
-    <form id="editPointForm">
-      <label>ID del Punto:</label>
-      <input type="number" id="editId" required />
-      <label>Nuevo Nombre:</label>
-      <input type="text" id="editName" required />
-      <label>Nueva Descripción:</label>
-      <input type="text" id="editDescription" required />
-      <label>Nueva Latitud:</label>
-      <input type="number" id="editLatitude" step="any" required />
-      <label>Nueva Longitud:</label>
-      <input type="number" id="editLongitude" step="any" required />
-      <button type="submit">Editar Punto</button>
-    </form>
+    <!-- Modal para editar punto -->
+    <div class="modal fade" id="editModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Editar Punto de Interés</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editPointForm">
+              <input type="hidden" id="editId" />
+              <div class="mb-2">
+                <label class="form-label">Nuevo Nombre:</label>
+                <input type="text" id="editName" class="form-control" />
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Nueva Descripción:</label>
+                <input type="text" id="editDescription" class="form-control" />
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Nueva Latitud:</label>
+                <input
+                  type="number"
+                  id="editLatitude"
+                  class="form-control"
+                  step="any"
+                />
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Nueva Longitud:</label>
+                <input
+                  type="number"
+                  id="editLongitude"
+                  class="form-control"
+                  step="any"
+                />
+              </div>
+              <button type="submit" class="btn btn-success">
+                Guardar Cambios
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      var map = L.map("map").setView([40.4168, -3.7038], 6); // Madrid como punto central
+      var map = L.map("map").setView([40.4168, -3.7038], 6);
 
-      // Cargar mapa base
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "&copy; OpenStreetMap contributors",
       }).addTo(map);
 
-      // Función para cargar puntos de interés desde la API
       function loadPoints() {
         fetch("/api/points")
           .then((response) => response.json())
           .then((data) => {
             data.forEach((point) => {
-              L.marker([point.latitude, point.longitude])
-                .addTo(map)
-                .bindPopup(`<b>${point.name}</b><br>${point.description}`);
+              let marker = L.marker([point.latitude, point.longitude]).addTo(
+                map
+              ).bindPopup(`
+                                <b>ID: ${point.id}</b><br>
+                                <b>${point.name}</b><br>${point.description}<br>
+                                <button class="btn btn-danger btn-sm mt-2" onclick="deletePoint(${point.id})">Eliminar</button>
+                                <button class="btn btn-warning btn-sm mt-2" onclick="openEditModal(${point.id}, '${point.name}', '${point.description}', ${point.latitude}, ${point.longitude})">Modificar</button>
+                            `);
             });
           })
           .catch((error) => console.error("Error cargando los puntos:", error));
       }
 
-      loadPoints(); // Cargar puntos iniciales al cargar la página
+      loadPoints();
 
-      // Evento para añadir un nuevo punto
       document
         .getElementById("addPointForm")
         .addEventListener("submit", function (event) {
           event.preventDefault();
-
           var newPoint = {
             name: document.getElementById("name").value,
             description: document.getElementById("description").value,
@@ -89,28 +150,42 @@
 
           fetch("/api/points", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newPoint),
           })
-            .then((response) => response.json())
-            .then((data) => {
-              L.marker([data.latitude, data.longitude])
-                .addTo(map)
-                .bindPopup(`<b>${data.name}</b><br>${data.description}`);
-            })
+            .then(() => location.reload())
             .catch((error) =>
               console.error("Error añadiendo el punto:", error)
             );
         });
 
-      // Evento para editar un punto existente
+      function deletePoint(id) {
+        if (confirm("¿Estás seguro de que deseas eliminar este punto?")) {
+          fetch(`/api/points/${id}`, { method: "DELETE" })
+            .then(() => location.reload())
+            .catch((error) =>
+              console.error("Error eliminando el punto:", error)
+            );
+        }
+      }
+
+      function openEditModal(id, name, description, latitude, longitude) {
+        document.getElementById("editId").value = id;
+        document.getElementById("editName").value = name;
+        document.getElementById("editDescription").value = description;
+        document.getElementById("editLatitude").value = latitude;
+        document.getElementById("editLongitude").value = longitude;
+
+        var editModal = new bootstrap.Modal(
+          document.getElementById("editModal")
+        );
+        editModal.show();
+      }
+
       document
         .getElementById("editPointForm")
         .addEventListener("submit", function (event) {
           event.preventDefault();
-
           var editedPoint = {
             id: parseInt(document.getElementById("editId").value),
             name: document.getElementById("editName").value,
@@ -121,18 +196,12 @@
             ),
           };
 
-          fetch("/api/points/" + editedPoint.id, {
+          fetch(`/api/points/${editedPoint.id}`, {
             method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(editedPoint),
           })
-            .then((response) => response.json())
-            .then((data) => {
-              alert("Punto editado correctamente.");
-              location.reload(); // Recargar la página para ver los cambios
-            })
+            .then(() => location.reload())
             .catch((error) => console.error("Error editando el punto:", error));
         });
     </script>
