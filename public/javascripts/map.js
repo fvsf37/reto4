@@ -1,3 +1,25 @@
+// ==================== FUNCIONALIDAD MODIFICAR PUNTO ====================
+function openEditModal(id, name, description, category, latitude, longitude) {
+  document.getElementById("editId").value = id;
+  document.getElementById("editName").value = name;
+  document.getElementById("editDescription").value = description;
+  document.getElementById("editCategory").value = category;
+  document.getElementById("editLatitude").value = latitude;
+  document.getElementById("editLongitude").value = longitude;
+
+  var editModal = new bootstrap.Modal(document.getElementById("editModal"));
+  editModal.show();
+}
+
+// ==================== FUNCIONALIDAD ELIMINAR PUNTO ====================
+function deletePoint(id) {
+  if (confirm("¿Estás seguro de que deseas eliminar este punto?")) {
+    fetch(`/api/points/${id}`, { method: "DELETE" })
+      .then(() => location.reload())
+      .catch((error) => console.error("Error eliminando el punto:", error));
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   console.log("map.js cargado correctamente");
 
@@ -70,26 +92,6 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(() => location.reload())
         .catch((error) => console.error("Error añadiendo el punto:", error));
     });
-
-  function deletePoint(id) {
-    if (confirm("¿Estás seguro de que deseas eliminar este punto?")) {
-      fetch(`/api/points/${id}`, { method: "DELETE" })
-        .then(() => location.reload())
-        .catch((error) => console.error("Error eliminando el punto:", error));
-    }
-  }
-
-  function openEditModal(id, name, description, category, latitude, longitude) {
-    document.getElementById("editId").value = id;
-    document.getElementById("editName").value = name;
-    document.getElementById("editDescription").value = description;
-    document.getElementById("editCategory").value = category;
-    document.getElementById("editLatitude").value = latitude;
-    document.getElementById("editLongitude").value = longitude;
-
-    var editModal = new bootstrap.Modal(document.getElementById("editModal"));
-    editModal.show();
-  }
 
   document
     .getElementById("editPointForm")
