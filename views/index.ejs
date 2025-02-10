@@ -29,6 +29,19 @@
       Encontrar Punto Más Cercano
     </button>
 
+    <h2>Filtrar por Categoría</h2>
+    <label for="categoryFilter" class="form-label"
+      >Selecciona una categoría:</label
+    >
+    <select id="categoryFilter" class="form-select mb-3">
+      <option value="Todos">Todos</option>
+      <option value="Histórico">Histórico</option>
+      <option value="Parque">Parque</option>
+      <option value="Museo">Museo</option>
+      <option value="Restaurante">Restaurante</option>
+      <option value="Otro">Otro</option>
+    </select>
+
     <h2>Añadir Nuevo Punto de Interés</h2>
     <form id="addPointForm" class="mb-4">
       <div class="mb-2">
@@ -38,6 +51,16 @@
       <div class="mb-2">
         <label class="form-label">Descripción:</label>
         <input type="text" id="description" class="form-control" required />
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Categoría:</label>
+        <select id="category" class="form-select" required>
+          <option value="Histórico">Histórico</option>
+          <option value="Parque">Parque</option>
+          <option value="Museo">Museo</option>
+          <option value="Restaurante">Restaurante</option>
+          <option value="Otro">Otro</option>
+        </select>
       </div>
       <div class="mb-2">
         <label class="form-label">Latitud:</label>
@@ -84,6 +107,16 @@
               <div class="mb-2">
                 <label class="form-label">Nueva Descripción:</label>
                 <input type="text" id="editDescription" class="form-control" />
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Nueva Categoría:</label>
+                <select id="editCategory" class="form-select">
+                  <option value="Histórico">Histórico</option>
+                  <option value="Parque">Parque</option>
+                  <option value="Museo">Museo</option>
+                  <option value="Restaurante">Restaurante</option>
+                  <option value="Otro">Otro</option>
+                </select>
               </div>
               <div class="mb-2">
                 <label class="form-label">Nueva Latitud:</label>

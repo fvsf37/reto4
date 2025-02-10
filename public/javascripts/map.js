@@ -11,14 +11,30 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch("/api/points")
       .then((response) => response.json())
       .then((data) => {
+        let selectedCategory =
+          localStorage.getItem("selectedCategory") || "Todos";
+        document.getElementById("categoryFilter").value = selectedCategory;
+
+        map.eachLayer((layer) => {
+          if (layer instanceof L.Marker) {
+            map.removeLayer(layer);
+          }
+        });
+
         data.forEach((point) => {
-          let marker = L.marker([point.latitude, point.longitude]).addTo(map)
-            .bindPopup(`
-                            <b>ID: ${point.id}</b><br>
-                            <b>${point.name}</b><br>${point.description}<br>
-                            <button class="btn btn-danger btn-sm mt-2" onclick="deletePoint(${point.id})">Eliminar</button>
-                            <button class="btn btn-warning btn-sm mt-2" onclick="openEditModal(${point.id}, '${point.name}', '${point.description}', ${point.latitude}, ${point.longitude})">Modificar</button>
-                        `);
+          if (
+            selectedCategory === "Todos" ||
+            point.category === selectedCategory
+          ) {
+            let marker = L.marker([point.latitude, point.longitude]).addTo(map)
+              .bindPopup(`
+                                <b>ID: ${point.id}</b><br>
+                                <b>${point.name}</b><br>${point.description}<br>
+                                <b>Categoría:</b> ${point.category}<br>
+                                <button class="btn btn-danger btn-sm mt-2" onclick="deletePoint(${point.id})">Eliminar</button>
+                                <button class="btn btn-warning btn-sm mt-2" onclick="openEditModal(${point.id}, '${point.name}', '${point.description}', '${point.category}', ${point.latitude}, ${point.longitude})">Modificar</button>
+                            `);
+          }
         });
       })
       .catch((error) => console.error("Error cargando los puntos:", error));
@@ -27,12 +43,21 @@ document.addEventListener("DOMContentLoaded", function () {
   loadPoints();
 
   document
+    .getElementById("categoryFilter")
+    .addEventListener("change", function () {
+      let selectedCategory = this.value;
+      localStorage.setItem("selectedCategory", selectedCategory);
+      loadPoints();
+    });
+
+  document
     .getElementById("addPointForm")
     .addEventListener("submit", function (event) {
       event.preventDefault();
       var newPoint = {
         name: document.getElementById("name").value,
         description: document.getElementById("description").value,
+        category: document.getElementById("category").value,
         latitude: parseFloat(document.getElementById("latitude").value),
         longitude: parseFloat(document.getElementById("longitude").value),
       };
@@ -54,10 +79,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function openEditModal(id, name, description, latitude, longitude) {
+  function openEditModal(id, name, description, category, latitude, longitude) {
     document.getElementById("editId").value = id;
     document.getElementById("editName").value = name;
     document.getElementById("editDescription").value = description;
+    document.getElementById("editCategory").value = category;
     document.getElementById("editLatitude").value = latitude;
     document.getElementById("editLongitude").value = longitude;
 
@@ -73,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
         id: parseInt(document.getElementById("editId").value),
         name: document.getElementById("editName").value,
         description: document.getElementById("editDescription").value,
+        category: document.getElementById("editCategory").value,
         latitude: parseFloat(document.getElementById("editLatitude").value),
         longitude: parseFloat(document.getElementById("editLongitude").value),
       };
