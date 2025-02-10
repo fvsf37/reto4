@@ -12,32 +12,83 @@
       #map {
         height: 500px;
         width: 100%;
+        margin-bottom: 20px;
       }
     </style>
   </head>
   <body>
     <h1>Mapa de Puntos de Interés</h1>
+
     <div id="map"></div>
+
+    <h2>Añadir Nuevo Punto de Interés</h2>
+    <form id="addPointForm">
+      <label>Nombre:</label>
+      <input type="text" id="name" required />
+      <label>Descripción:</label>
+      <input type="text" id="description" required />
+      <label>Latitud:</label>
+      <input type="number" id="latitude" step="any" required />
+      <label>Longitud:</label>
+      <input type="number" id="longitude" step="any" required />
+      <button type="submit">Añadir Punto</button>
+    </form>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-      var map = L.map("map").setView([40.4168, -3.7038], 6); // Coordenadas centradas en España
+      var map = L.map("map").setView([40.4168, -3.7038], 6); // Madrid como punto central
 
+      // Cargar mapa base
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "&copy; OpenStreetMap contributors",
       }).addTo(map);
 
-      // Cargar puntos de interés desde la API
-      fetch("/api/points")
-        .then((response) => response.json())
-        .then((data) => {
-          data.forEach((point) => {
-            L.marker([point.latitude, point.longitude])
-              .addTo(map)
-              .bindPopup(`<b>${point.name}</b><br>${point.description}`);
-          });
-        })
-        .catch((error) => console.error("Error cargando los puntos:", error));
+      // Función para cargar puntos de interés desde la API
+      function loadPoints() {
+        fetch("/api/points")
+          .then((response) => response.json())
+          .then((data) => {
+            data.forEach((point) => {
+              L.marker([point.latitude, point.longitude])
+                .addTo(map)
+                .bindPopup(`<b>${point.name}</b><br>${point.description}`);
+            });
+          })
+          .catch((error) => console.error("Error cargando los puntos:", error));
+      }
+
+      loadPoints(); // Cargar puntos iniciales al cargar la página
+
+      // Evento para añadir un nuevo punto
+      document
+        .getElementById("addPointForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          var newPoint = {
+            name: document.getElementById("name").value,
+            description: document.getElementById("description").value,
+            latitude: parseFloat(document.getElementById("latitude").value),
+            longitude: parseFloat(document.getElementById("longitude").value),
+          };
+
+          fetch("/api/points", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newPoint),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              L.marker([data.latitude, data.longitude])
+                .addTo(map)
+                .bindPopup(`<b>${data.name}</b><br>${data.description}`);
+            })
+            .catch((error) =>
+              console.error("Error añadiendo el punto:", error)
+            );
+        });
     </script>
   </body>
 </html>
