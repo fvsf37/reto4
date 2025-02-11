@@ -1,0 +1,144 @@
+/* ====== ESTILOS GENERALES ====== */
+body {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+}
+
+/* ====== ESTILO DEL CONTENEDOR PRINCIPAL ====== */
+.container-custom {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* ====== ESTILO PARA LA TARJETA GLASSMORPHISM ====== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ====== ESTILO DEL MAPA ====== */
+#map {
+  height: 500px;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+
+/* ====== BOTÓN LLAMATIVO ====== */
+.btn-custom {
+  background: linear-gradient(135deg, #ff7eb3, #ff758c);
+  border: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 12px 20px;
+  border-radius: 25px;
+  transition: 0.3s;
+}
+.btn-custom:hover {
+  background: linear-gradient(135deg, #ff5a8e, #ff3855);
+}
+
+/* ====== ESTILO DEL MODAL ====== */
+.modal-content {
+  background: rgba(255, 255, 255, 0.2); /* Fondo translúcido */
+  backdrop-filter: blur(10px); /* Efecto Glassmorphism */
+  -webkit-backdrop-filter: blur(10px); /* Soporte para Webkit */
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+/* ====== ESTILO PARA EL TEXTO Y CAMPOS DEL MODAL ====== */
+.modal-header,
+.modal-body {
+  background: transparent;
+  color: white;
+}
+
+.modal-title {
+  font-weight: bold;
+}
+
+.modal .form-label {
+  color: white;
+}
+
+/* ====== BOTÓN DENTRO DEL MODAL ====== */
+.modal .btn-custom {
+  background: linear-gradient(135deg, #ff7eb3, #ff758c);
+  border: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 25px;
+  transition: 0.3s;
+  width: 100%;
+}
+
+.modal .btn-custom:hover {
+  background: linear-gradient(135deg, #ff5a8e, #ff3855);
+}
+
+/* ====== ESTILO DE LOS POPUPS DE LEAFLET ====== */
+.leaflet-popup-content {
+  font-family: "Poppins", sans-serif;
+  color: black;
+  background: transparent;
+  text-align: left;
+}
+
+.leaflet-popup-content-wrapper {
+  background: rgba(255, 255, 255, 0.2); /* Fondo translúcido */
+  backdrop-filter: blur(5px); /* Efecto Glassmorphism */
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 15px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.leaflet-popup-tip {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ====== ESTILO DE LOS BOTONES DENTRO DEL POPUP ====== */
+.leaflet-popup-content .btn {
+  font-weight: bold;
+  border-radius: 25px;
+  padding: 8px 15px;
+  margin: 5px 3px;
+  transition: 0.3s;
+  width: 100%;
+  text-align: center;
+}
+
+.leaflet-popup-content .btn-danger {
+  background: linear-gradient(135deg, #ff5a5a, #ff3838);
+  color: white;
+  border: none;
+}
+
+.leaflet-popup-content .btn-danger:hover {
+  background: linear-gradient(135deg, #ff3838, #ff0000);
+}
+
+.leaflet-popup-content .btn-warning {
+  background: linear-gradient(135deg, #ffc107, #ff9800);
+  color: black;
+  border: none;
+}
+
+.leaflet-popup-content .btn-warning:hover {
+  background: linear-gradient(135deg, #ff9800, #ff7700);
+}
