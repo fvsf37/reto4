@@ -24,7 +24,7 @@ router.post("/login", function (req, res) {
   );
 
   if (user) {
-    req.session.user = username; // Guardar usuario en la sesión
+    req.session.user = username;
     res.json({ message: "Login exitoso", user: username });
   } else {
     res.status(401).json({ error: "Usuario o contraseña incorrectos" });

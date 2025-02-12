@@ -10,12 +10,12 @@ function authMiddleware(req, res, next) {
   next();
 }
 
-// Obtener los puntos de interés (sin restricciones)
+// Obtener los puntos de interés
 router.get("/points", function (req, res, next) {
   res.json(pointsOfInterest);
 });
 
-// Añadir un nuevo punto (restringido a usuarios autenticados)
+// Añadir un nuevo punto
 router.post("/points", authMiddleware, function (req, res, next) {
   const newPoint = {
     id: Date.now(),
@@ -30,7 +30,7 @@ router.post("/points", authMiddleware, function (req, res, next) {
   res.json(newPoint);
 });
 
-// Editar un punto (solo para usuarios autenticados)
+// Editar un punto
 router.put("/points/:id", authMiddleware, function (req, res, next) {
   const pointId = parseInt(req.params.id);
   const updatedPoint = {
@@ -51,7 +51,7 @@ router.put("/points/:id", authMiddleware, function (req, res, next) {
   }
 });
 
-// Eliminar un punto (solo para usuarios autenticados)
+// Eliminar un punto
 router.delete("/points/:id", authMiddleware, function (req, res, next) {
   const pointId = parseInt(req.params.id);
   let index = pointsOfInterest.findIndex((point) => point.id === pointId);

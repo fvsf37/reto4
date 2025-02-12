@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const loginForm = document.getElementById("loginForm");
   const logoutBtn = document.getElementById("logoutBtn");
-  const addPointSection = document.getElementById("addPointSection"); // Sección de añadir puntos
+  const addPointSection = document.getElementById("addPointSection");
 
   loginForm.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
           localStorage.setItem("loggedIn", "true");
           loginForm.style.display = "none";
           logoutBtn.style.display = "block";
-          if (addPointSection) addPointSection.style.display = "block"; // Mostrar formulario de añadir puntos
+          if (addPointSection) addPointSection.style.display = "block";
         } else {
           alert("Error en login");
         }
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.removeItem("loggedIn");
         loginForm.style.display = "block";
         logoutBtn.style.display = "none";
-        if (addPointSection) addPointSection.style.display = "none"; // Ocultar formulario de añadir puntos
+        if (addPointSection) addPointSection.style.display = "none";
       })
       .catch((error) => {
         console.error("Error al cerrar sesión:", error);
@@ -49,6 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
   if (localStorage.getItem("loggedIn") === "true") {
     loginForm.style.display = "none";
     logoutBtn.style.display = "block";
-    if (addPointSection) addPointSection.style.display = "block"; // Mostrar formulario si el usuario está autenticado
+    if (addPointSection) addPointSection.style.display = "block";
   }
 });
