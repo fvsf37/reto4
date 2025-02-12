@@ -2,27 +2,36 @@ var express = require("express");
 var router = express.Router();
 var pointsOfInterest = require("../data/data_provider");
 
-// Ruta para obtener los puntos de interés
+// Middleware para verificar autenticación
+function authMiddleware(req, res, next) {
+  if (!req.session.user) {
+    return res.status(403).json({ error: "No autorizado" });
+  }
+  next();
+}
+
+// Obtener los puntos de interés (sin restricciones)
 router.get("/points", function (req, res, next) {
   res.json(pointsOfInterest);
 });
 
-// Ruta para añadir un nuevo punto de interés
-router.post("/points", function (req, res, next) {
+// Añadir un nuevo punto (restringido a usuarios autenticados)
+router.post("/points", authMiddleware, function (req, res, next) {
   const newPoint = {
-    id: pointsOfInterest.length + 1,
+    id: Date.now(),
     name: req.body.name,
     description: req.body.description,
     latitude: parseFloat(req.body.latitude),
     longitude: parseFloat(req.body.longitude),
+    category: req.body.category,
   };
 
   pointsOfInterest.push(newPoint);
   res.json(newPoint);
 });
 
-// Ruta para editar un punto de interés
-router.put("/points/:id", function (req, res, next) {
+// Editar un punto (solo para usuarios autenticados)
+router.put("/points/:id", authMiddleware, function (req, res, next) {
   const pointId = parseInt(req.params.id);
   const updatedPoint = {
     id: pointId,
@@ -30,10 +39,10 @@ router.put("/points/:id", function (req, res, next) {
     description: req.body.description,
     latitude: parseFloat(req.body.latitude),
     longitude: parseFloat(req.body.longitude),
+    category: req.body.category,
   };
 
   let index = pointsOfInterest.findIndex((point) => point.id === pointId);
-
   if (index !== -1) {
     pointsOfInterest[index] = updatedPoint;
     res.json(updatedPoint);
@@ -42,8 +51,8 @@ router.put("/points/:id", function (req, res, next) {
   }
 });
 
-// Ruta para eliminar un punto de interés
-router.delete("/points/:id", function (req, res, next) {
+// Eliminar un punto (solo para usuarios autenticados)
+router.delete("/points/:id", authMiddleware, function (req, res, next) {
   const pointId = parseInt(req.params.id);
   let index = pointsOfInterest.findIndex((point) => point.id === pointId);
 

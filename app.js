@@ -9,6 +9,15 @@ var usersRouter = require("./routes/users");
 var apiRouter = require("./routes/api");
 
 var app = express();
+var session = require("express-session");
+
+app.use(
+  session({
+    secret: "clave_secreta",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
