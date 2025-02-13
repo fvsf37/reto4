@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
           ) {
             let marker = L.marker([point.latitude, point.longitude]).addTo(map)
               .bindPopup(`
-                                <b>ID: ${point.id}</b><br>
                                 <b>${point.name}</b><br>${point.description}<br>
                                 <b>Categoría:</b> ${point.category}<br>
                                 <button class="btn btn-danger btn-sm mt-2" onclick="deletePoint(${point.id})">Eliminar</button>
